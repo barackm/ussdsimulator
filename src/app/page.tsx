@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <header className="absolute top-5 right-5 flex gap-4">
+      <header className="absolute top-5 flex gap-6">
         <Link
           href="https://github.com/barackm/ussdsimulator"
           target="_blank"
@@ -33,13 +33,14 @@ export default function Home() {
       </header>
       <main className="flex flex-col gap-8 row-start-2 items-center">
         <h1 className="text-4xl font-bold">Welcome to USSD Simulator</h1>
-        <p className="text-center sm:text-left">
-          Get started by editing{" "}
+        <p className="text-center sm:text-left w-full max-w-[500px]">
+          Welcome to the USSD Simulator! Start exploring by navigating to the
           <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-            src/app/page.tsx
+            src/app/ussd/page.tsx
           </code>
-          .
+          and testing your USSD flows.
         </p>
+
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <Link href="/ussd">
             <Button>Try USSD Simulator</Button>
