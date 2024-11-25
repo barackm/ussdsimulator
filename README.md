@@ -32,11 +32,11 @@ building and debugging USSD applications.
 
 ### Configuration Modal
 
-![USSD Configuration](./ussd-config.png)
+<img src="./ussd-config.png" alt="USSD Configuration" height="400">
 
 ### USSD Interface
 
-![USSD Interface](./ussd-interface.png)
+<img src="./ussd-interface.png" alt="USSD Interface" height="400">
 
 ---
 
