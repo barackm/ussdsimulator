@@ -26,6 +26,20 @@ building and debugging USSD applications.
 - **Loading and Response Screens**: Mimics the experience of loading indicators
   and response messages.
 
+---
+
+## Demo
+
+### Configuration Modal
+
+![USSD Configuration](./ussd-config.png)
+
+### USSD Interface
+
+![USSD Interface](./ussd-interface.png)
+
+---
+
 ## Installation
 
 1. Clone the repository:
