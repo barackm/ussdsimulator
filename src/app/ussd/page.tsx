@@ -136,7 +136,7 @@ const Ussd = () => {
           <Home className="w-6 h-6 text-gray-800" />
         </Link>
       </div>
-      <div className="relative flex justify-center items-center h-[700px] w-[350px] overflow-hidden ">
+      <div className="relative flex justify-center items-center h-screen sm:h-[700px] w-[350px] overflow-hidden">
         <Image
           src="/phone-frame.png"
           alt="Phone Frame"
