@@ -12,8 +12,18 @@ import {
 import { Input } from "~/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { PhoneInput } from "../ui/phone-input";
+import { useUssdConfigStore } from "~/stores/ussd-config-store";
+import { useEffect } from "react";
 
 type Props = {
   open: boolean;
@@ -21,68 +31,139 @@ type Props = {
 };
 
 const FormSchema = z.object({
-  phoneNumber: z.string(),
+  phoneNumber: z.string().min(10),
+  ussdCode: z
+    .string()
+    .regex(
+      /^\*[\d*#]+#$/,
+      "USSD code must start with *, end with #, and can contain numbers, * and # in between."
+    ),
+  callbackUrl: z.string().url(),
 });
 
 const UssdConfigModal = (props: Props) => {
   const { open, onClose } = props;
+  const setConfig = useUssdConfigStore((state) => state.setConfig);
+  const config = useUssdConfigStore((state) => state);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       phoneNumber: "",
+      ussdCode: "",
+      callbackUrl: "",
     },
   });
 
+  useEffect(() => {
+    if (
+      form.getValues("phoneNumber") !== config.phoneNumber ||
+      form.getValues("ussdCode") !== config.ussdCode ||
+      form.getValues("callbackUrl") !== config.callbackUrl
+    ) {
+      form.reset({
+        phoneNumber: config.phoneNumber,
+        ussdCode: config.ussdCode,
+        callbackUrl: config.callbackUrl,
+      });
+    }
+  }, [config, form]);
+
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+    setConfig({
+      phoneNumber: data.phoneNumber,
+      ussdCode: data.ussdCode,
+      callbackUrl: data.callbackUrl,
+    });
+
+    localStorage.setItem("ussdConfig", JSON.stringify(data));
+    setConfig({ showConfigModal: false });
   };
 
+  const isConfigEmpty =
+    !config.phoneNumber && !config.ussdCode && !config.callbackUrl;
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={() => {
+        if (isConfigEmpty) return;
+        onClose();
+      }}
+    >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className=''>
-          <DialogContent className='sm:max-w-md'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Share link</DialogTitle>
-              <DialogDescription>Anyone who has this link will be able to view this.</DialogDescription>
+              <DialogTitle>USSD Configuration</DialogTitle>
+              <DialogDescription>
+                Configure the USSD settings.
+              </DialogDescription>
             </DialogHeader>
-            <div className='flex items-center flex-col space-x-2 w-full'>
+            <div className="flex items-center flex-col space-x-2 w-full">
               <FormField
                 control={form.control}
-                name='phoneNumber'
+                name="phoneNumber"
                 render={({ field }) => (
-                  <FormItem className='w-full'>
+                  <FormItem className="w-full">
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input placeholder='shadcn' {...field} />
+                      <PhoneInput {...field} />
                     </FormControl>
-                    <FormDescription>Enter the phone number you want to send the link to.</FormDescription>
+                    <FormDescription>
+                      Enter a valid phone number with country
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name='phoneNumber'
+                name="ussdCode"
                 render={({ field }) => (
-                  <FormItem className='w-full'>
-                    n<FormLabel>Phone Number</FormLabel>
+                  <FormItem className="w-full">
+                    <FormLabel>USSD Code</FormLabel>
                     <FormControl>
-                      <PhoneInput {...field} />
+                      <Input placeholder="*123#" {...field} />
                     </FormControl>
-                    <FormDescription>Enter a valid phone number with country</FormDescription>
+                    <FormDescription>Enter the USSD code.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="callbackUrl"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Callback URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://example.com/ussd"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>Enter the callback URL.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <DialogFooter className='sm:justify-start'>
-              <Button type='submit' size='sm' className='px-3'>
+            <DialogFooter className="sm:justify-start">
+              <Button
+                type="submit"
+                size="sm"
+                className="px-3"
+                onClick={form.handleSubmit(onSubmit)}
+              >
                 Update
               </Button>
               <DialogClose asChild>
-                <Button type='button' variant='secondary'>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={isConfigEmpty}
+                >
                   Close
                 </Button>
               </DialogClose>

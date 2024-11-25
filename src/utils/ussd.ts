@@ -1,4 +1,7 @@
-export const supportedUssdCodes: { serviceCode: string; networkCode: string }[] = [
+export const supportedUssdCodes: {
+  serviceCode: string;
+  networkCode: string;
+}[] = [
   {
     serviceCode: "*456#",
     networkCode: "Airtel",
@@ -9,6 +12,8 @@ export const supportedUssdCodes: { serviceCode: string; networkCode: string }[] 
   },
 ];
 
-export const validateUssdCode = (serviceCode: string): { serviceCode: string; networkCode: string } | undefined => {
+export const validateUssdCode = (
+  serviceCode: string
+): { serviceCode: string; networkCode: string } | undefined => {
   return supportedUssdCodes.find((code) => code.serviceCode === serviceCode);
 };
