@@ -14,6 +14,8 @@ import { FaCog } from "react-icons/fa";
 import { useInitializeUssdConfig } from "~/hooks/use-ussd-init";
 import { useUssdConfigStore } from "~/stores/ussd-config-store";
 import Image from "next/image";
+import Link from "next/link";
+import { Home } from "lucide-react";
 
 const Ussd = () => {
   const [loading, setLoading] = useState(false);
@@ -128,6 +130,11 @@ const Ussd = () => {
           open={showConfigModal}
           onClose={() => setShowConfigModal(false)}
         />
+      </div>
+      <div className="absolute top-5 left-5 p-4">
+        <Link href="/" className="rounded-full w-9">
+          <Home className="w-6 h-6 text-gray-800" />
+        </Link>
       </div>
       <div className="relative flex justify-center items-center h-[700px] w-[350px] overflow-hidden ">
         <Image

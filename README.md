@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# USSD Simulator
 
-## Getting Started
+The USSD Simulator is a web-based application designed to simulate the user
+experience of interacting with USSD (Unstructured Supplementary Service Data)
+applications. It allows developers to test USSD flows and logic in a browser
+environment, providing a highly configurable and extensible architecture for
+building and debugging USSD applications.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **USSD Code Validation**: Supports validation of USSD codes to ensure
+  adherence to proper syntax.
+- **Session Management**: Simulates USSD sessions with unique session IDs.
+- **Configurable Phone UI**: Provides a realistic phone interface with status
+  bars, input fields, keypads, and action buttons.
+- **Dynamic Response Handling**: Displays `CON` (continue) and `END` responses,
+  simulating real USSD interactions.
+- **Zustand State Management**: Stores configuration settings like phone
+  numbers, USSD codes, and callback URLs.
+- **Customizable Backend Integration**: Sends requests to a configured backend
+  to simulate real-world USSD flows.
+- **Keypad and Navigation**: Includes a fully functional keypad for user input
+  and navigation.
+- **Loading and Response Screens**: Mimics the experience of loading indicators
+  and response messages.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone the repository:
 
-## Learn More
+   ```bash
+   git clone https://github.com/barackm/ussdsimulator.git
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Install dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Start the development server:
 
-## Deploy on Vercel
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Usage
+
+- Open the simulator in your browser.
+- Enter the USSD code and interact with the keypad to simulate USSD flows.
+- Use the configuration modal to update settings such as phone number, callback
+  URL, and USSD code.
+
+---
+
+## Configuration
+
+You can configure the simulator using the `UssdConfigModal`. Key settings
+include:
+
+- **Phone Number**: The simulated user's phone number.
+- **USSD Code**: The code to initiate a USSD session.
+- **Callback URL**: The backend URL to handle USSD requests.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
