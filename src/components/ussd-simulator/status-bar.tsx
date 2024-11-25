@@ -12,11 +12,12 @@ const StatusBar: React.FC = () => {
         })}
       </span>
       <Image
-        src="status-bar.png"
+        src="/status-bar.png"
         alt="Status Bar"
         className="h-10 w-full object-scale-down"
-        layout="fill"
-        objectFit="contain"
+        layout="intrinsic"
+        width={350}
+        height={14}
       />
     </div>
   );
