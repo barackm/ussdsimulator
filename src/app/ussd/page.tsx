@@ -88,8 +88,6 @@ const Ussd = () => {
         phoneNumber: config.phoneNumber.trim(),
       };
 
-      console.log({ payload });
-
       const response = await axios.post(config.callbackUrl, payload);
       const serverResponse = response.data;
       setEditMode(false);
@@ -98,8 +96,7 @@ const Ussd = () => {
       if (initialDial) {
         setInitialDial(false);
       }
-    } catch (error) {
-      console.log({ error });
+    } catch {
       setResponseMessage("END An error occurred. Please try again later.");
       setUssdCode("");
     } finally {
