@@ -1,6 +1,13 @@
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "USSD Simulator",
+  description:
+    "Welcome to the USSD Simulator! Start exploring by navigating to the src/app/ussd/page.tsx and testing your USSD flows.",
+};
 
 export default function Home() {
   return (
