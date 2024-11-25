@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import StatusBar from "./status-bar";
 
 interface ResponseMessageProps {
   responseMessage: string;
@@ -35,6 +36,7 @@ const ResponseMessage: React.FC<ResponseMessageProps> = ({
 
   return (
     <div className="absolute inset-0 z-50 flex flex-col bg-gray-800">
+      <StatusBar isDark />
       {editMode ? (
         <div className="flex items-center justify-between text-white text-sm bg-gray-800 pt-[50px]">
           <button
