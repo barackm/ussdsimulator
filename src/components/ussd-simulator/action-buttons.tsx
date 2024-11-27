@@ -32,9 +32,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           <Image
             src="/delete.png"
             alt="Delete"
-            className="w-full h-full transition duration-150 ease-in-out"
-            layout="fill"
-            objectFit="contain"
+            className="transition duration-150 ease-in-out"
+            width={35}
+            height={35}
           />
         </button>
       )}
