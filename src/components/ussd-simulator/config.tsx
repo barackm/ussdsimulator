@@ -32,7 +32,7 @@ type Props = {
 
 const FormSchema = z.object({
   phoneNumber: z.string().min(10),
-  ussdCode: z
+  serviceCode: z
     .string()
     .regex(
       /^\*[\d*#]+#$/,
@@ -50,7 +50,7 @@ const UssdConfigModal = (props: Props) => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       phoneNumber: "",
-      ussdCode: "",
+      serviceCode: "",
       callbackUrl: "",
     },
   });
@@ -58,12 +58,12 @@ const UssdConfigModal = (props: Props) => {
   useEffect(() => {
     if (
       form.getValues("phoneNumber") !== config.phoneNumber ||
-      form.getValues("ussdCode") !== config.ussdCode ||
+      form.getValues("serviceCode") !== config.serviceCode ||
       form.getValues("callbackUrl") !== config.callbackUrl
     ) {
       form.reset({
         phoneNumber: config.phoneNumber,
-        ussdCode: config.ussdCode,
+        serviceCode: config.serviceCode,
         callbackUrl: config.callbackUrl,
       });
     }
@@ -72,7 +72,7 @@ const UssdConfigModal = (props: Props) => {
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     setConfig({
       phoneNumber: data.phoneNumber,
-      ussdCode: data.ussdCode,
+      serviceCode: data.serviceCode,
       callbackUrl: data.callbackUrl,
     });
 
@@ -81,7 +81,7 @@ const UssdConfigModal = (props: Props) => {
   };
 
   const isConfigEmpty =
-    !config.phoneNumber && !config.ussdCode && !config.callbackUrl;
+    !config.phoneNumber && !config.serviceCode && !config.callbackUrl;
 
   return (
     <Dialog
@@ -119,7 +119,7 @@ const UssdConfigModal = (props: Props) => {
               />
               <FormField
                 control={form.control}
-                name="ussdCode"
+                name="serviceCode"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>USSD Code</FormLabel>

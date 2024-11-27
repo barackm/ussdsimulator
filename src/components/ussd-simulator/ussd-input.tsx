@@ -1,11 +1,14 @@
 import React, { useRef } from "react";
 
 interface UssdInputProps {
-  ussdCode: string;
-  setUssdCode: (code: string) => void;
+  inputValue: string;
+  setInputValue: (code: string) => void;
 }
 
-const UssdInput: React.FC<UssdInputProps> = ({ ussdCode, setUssdCode }) => {
+const UssdInput: React.FC<UssdInputProps> = ({
+  inputValue: inputValue,
+  setInputValue,
+}) => {
   const ussdInputRef = useRef<HTMLInputElement>(null);
 
   const keepFocus = () => {
@@ -13,13 +16,13 @@ const UssdInput: React.FC<UssdInputProps> = ({ ussdCode, setUssdCode }) => {
   };
 
   return (
-    <div className='h-16'>
+    <div className="h-16">
       <input
         ref={ussdInputRef}
-        value={ussdCode}
-        onChange={(e) => setUssdCode(e.target.value)}
-        type='text'
-        className='h-full w-full outline-none text-2xl bg-white px-4 text-center text-gray-800'
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        type="text"
+        className="h-full w-full outline-none text-2xl bg-white px-4 text-center text-gray-800"
         onBlur={keepFocus}
       />
     </div>

@@ -20,7 +20,6 @@ import { Home } from "lucide-react";
 const Ussd = () => {
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
-  const [initialDial, setInitialDial] = useState(true);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
 
@@ -29,22 +28,22 @@ const Ussd = () => {
     (state) => state.setShowConfigModal
   );
   const config = useUssdConfigStore((state) => state);
-  const [ussdCode, setUssdCode] = useState(config.ussdCode);
+  const [inputValue, setInputValue] = useState("");
   const initializedRef = useRef(false);
 
   useInitializeUssdConfig();
 
   useEffect(() => {
-    if (!initializedRef.current && config.ussdCode) {
-      setUssdCode(config.ussdCode);
+    if (!initializedRef.current && config.serviceCode) {
+      setInputValue(config.serviceCode);
       initializedRef.current = true;
     }
-  }, [config, ussdCode]);
+  }, [config, inputValue]);
 
   const ussdInputRef = useRef<HTMLInputElement>(null);
 
   const appendToUssdCode = (value: string) => {
-    setUssdCode((prev) => prev + value);
+    setInputValue((prev) => prev + value);
     keepFocus();
   };
 
@@ -62,57 +61,82 @@ const Ussd = () => {
 
   const resetSession = () => {
     setSessionId(null);
-    setInitialDial(true);
-    setUssdCode(config.ussdCode);
+    setInputValue("");
     setResponseMessage("");
   };
 
   const sendUssd = async () => {
     const newSessionId = initializeSession();
-    if (ussdCode.trim() === "") {
+
+    if (inputValue.trim() === "") {
       setResponseMessage("Please enter a USSD code.");
       return;
     }
 
-    if (config.ussdCode !== ussdCode && initialDial) {
-      setResponseMessage("END UNKNOWN APPLICATION");
-      setUssdCode("");
-      resetSession();
-      return;
+    let extractedText = "";
+
+    if (!sessionId) {
+      // Initial USSD code
+      if (inputValue.startsWith("*") && inputValue.endsWith("#")) {
+        const ussdCodeBody = inputValue.slice(1, -1);
+        const serviceCodeBody = config.serviceCode.slice(1, -1);
+
+        if (ussdCodeBody.startsWith(serviceCodeBody)) {
+          extractedText = ussdCodeBody.slice(serviceCodeBody.length);
+          if (extractedText.startsWith("*")) {
+            extractedText = extractedText.slice(1);
+          }
+        } else {
+          setResponseMessage("END INVALID USSD CODE");
+          resetSession();
+          return;
+        }
+      } else {
+        setResponseMessage("END INVALID USSD CODE");
+        resetSession();
+        return;
+      }
+    } else {
+      // Subsequent reply in the session
+      extractedText = inputValue.trim();
     }
 
     try {
       setLoading(true);
+
       const payload = {
-        text: initialDial ? "" : ussdCode,
+        text: extractedText,
         sessionId: sessionId || newSessionId,
-        serviceCode: config!.ussdCode,
+        serviceCode: config.serviceCode,
         phoneNumber: config.phoneNumber.trim(),
       };
 
       const response = await axios.post(config.callbackUrl, payload);
       const serverResponse = response.data;
+
+      // Check if session has ended
+      if (serverResponse.startsWith("END")) {
+        resetSession();
+      }
+
       setEditMode(false);
       setResponseMessage(serverResponse);
-      setUssdCode("");
-      if (initialDial) {
-        setInitialDial(false);
-      }
+      setInputValue("");
     } catch {
       setResponseMessage("END An error occurred. Please try again later.");
-      setUssdCode("");
+      setInputValue("");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = () => {
-    setUssdCode((prev) => prev.slice(0, -1));
+    setInputValue((prev) => prev.slice(0, -1));
   };
 
   const clearMessage = () => {
     setResponseMessage("");
-    setUssdCode("");
+    setInputValue("");
     keepFocus();
   };
 
@@ -149,10 +173,13 @@ const Ussd = () => {
             <StatusBar />
             <div className="h-full relative pt-10 flex flex-col">
               <div className="flex flex-col flex-grow justify-end">
-                <UssdInput ussdCode={ussdCode} setUssdCode={setUssdCode} />
+                <UssdInput
+                  inputValue={inputValue}
+                  setInputValue={setInputValue}
+                />
                 <Keypad appendToUssdCode={appendToUssdCode} />
                 <ActionButtons
-                  ussdCode={ussdCode}
+                  inputValue={inputValue}
                   sendUssd={sendUssd}
                   handleDelete={handleDelete}
                 />
@@ -165,8 +192,8 @@ const Ussd = () => {
               responseMessage={responseMessage}
               clearMessage={clearMessage}
               sendUssd={sendUssd}
-              setUssdCode={setUssdCode}
-              ussdCode={ussdCode}
+              setInputValue={setInputValue}
+              inputValue={inputValue}
               setResponseMessage={setResponseMessage}
               editMode={editMode}
               setEditMode={setEditMode}

@@ -3,8 +3,8 @@ import StatusBar from "./status-bar";
 
 interface ResponseMessageProps {
   responseMessage: string;
-  ussdCode: string;
-  setUssdCode: (value: string) => void;
+  inputValue: string;
+  setInputValue: (value: string) => void;
   setResponseMessage: (value: string) => void;
   clearMessage: () => void;
   sendUssd: () => void;
@@ -14,8 +14,8 @@ interface ResponseMessageProps {
 
 const ResponseMessage: React.FC<ResponseMessageProps> = ({
   responseMessage,
-  ussdCode,
-  setUssdCode,
+  inputValue,
+  setInputValue,
   clearMessage,
   sendUssd,
   setResponseMessage,
@@ -43,7 +43,7 @@ const ResponseMessage: React.FC<ResponseMessageProps> = ({
             className="text-blue-500 font-medium py-2 px-6"
             onClick={() => {
               setEditMode(false);
-              setUssdCode("");
+              setInputValue("");
               setResponseMessage("");
             }}
           >
@@ -59,16 +59,15 @@ const ResponseMessage: React.FC<ResponseMessageProps> = ({
       ) : null}
 
       <div className="flex-grow flex flex-col justify-center items-center text-white px-2">
-        <div className="text-center text-white text-base font-normal leading-relaxed whitespace-pre-wrap">
+        <div className="text-center text-white text-base font-normal leading-relaxed whitespace-pre-wrap p-4 break-words">
           {formattedMessage}
         </div>
-
         {editMode && (
           <div className="mt-4 w-full px-4">
             <input
               ref={ussdInputRef}
-              value={ussdCode}
-              onChange={(e) => setUssdCode(e.target.value)}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               onBlur={keepFocus}
               type="text"
               className="w-full h-8 px-1 rounded-md bg-transparent text-white border border-gray-300 focus:outline-none"
